@@ -1,0 +1,12 @@
+{
+  "name": "comprendo",
+  "description": "Gate AI implementation behind visual developer approval with architecture diagrams",
+  "version": "0.2.0",
+  "author": {
+    "name": "Nikhil Enmudi",
+    "url": "https://github.com/nikhilenmudi"
+  },
+  "repository": "https://github.com/nikhilenmudi/comprendo",
+  "license": "MIT",
+  "keywords": ["review", "approval", "diagrams", "safety"]
+}

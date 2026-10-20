@@ -1,0 +1,20 @@
+{
+  "name": "comprendo-marketplace",
+  "owner": {
+    "name": "Nikhil Enmudi"
+  },
+  "plugins": [
+    {
+      "name": "comprendo",
+      "source": "./",
+      "description": "Gate AI implementation behind visual developer approval with architecture diagrams",
+      "version": "0.2.0",
+      "author": {
+        "name": "Nikhil Enmudi"
+      },
+      "repository": "https://github.com/nikhilenmudi/comprendo",
+      "license": "MIT",
+      "keywords": ["review", "approval", "diagrams", "safety"]
+    }
+  ]
+}

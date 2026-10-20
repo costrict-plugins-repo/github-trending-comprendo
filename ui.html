@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comprendo — Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/typescript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/css.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d0d0d;
+      color: #e8e8e8;
+      font-family: 'Inter', -apple-system, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Header ──────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      border-bottom: 1px solid #222;
+      position: sticky;
+      top: 0;
+      background: #0d0d0d;
+      z-index: 100;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 2px;
+      color: #7c6aff;
+    }
+
+    .logo span {
+      color: #555;
+      font-weight: 400;
+      font-size: 13px;
+      margin-left: 12px;
+      letter-spacing: 0;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 28px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: none;
+      position: relative;
+    }
+
+    .btn-approve {
+      background: #7c6aff;
+      color: #fff;
+    }
+    .btn-approve:hover { background: #6b59e8; }
+
+    .btn-reject {
+      background: transparent;
+      color: #999;
+      border: 1px solid #666;
+    }
+    .btn-reject:hover { border-color: #999; color: #ccc; }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn .spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 8px;
+    }
+
+    .btn.loading .spinner { display: inline-block; }
+    .btn.loading .btn-text { opacity: 0.7; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Main content ────────────────────────────────────── */
+    .content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 32px 48px;
+    }
+
+    .summary {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #fff;
+    }
+
+    /* ── Diagrams ────────────────────────────────────────── */
+    .diagrams {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .diagram-panel {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #222;
+    }
+
+    .diagram-panel h3 {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #666;
+      margin-bottom: 16px;
+    }
+
+    .diagram-render {
+      min-height: 120px;
+      overflow-x: auto;
+    }
+
+    /* ── Explanation ──────────────────────────────────────── */
+    .section {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid #222;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #666;
+      margin-bottom: 12px;
+    }
+
+    .explanation-text {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #ccc;
+      white-space: pre-wrap;
+    }
+
+    /* ── Code snippets ───────────────────────────────────── */
+    .snippet-toggle {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+
+    .snippet-tab {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: transparent;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .snippet-tab.active {
+      background: #7c6aff;
+      border-color: #7c6aff;
+      color: #fff;
+    }
+
+    .snippet-tab:hover:not(.active) {
+      border-color: #555;
+      color: #bbb;
+    }
+
+    .snippet-code {
+      display: none;
+    }
+
+    .snippet-code.active {
+      display: block;
+    }
+
+    .snippet-code pre {
+      margin: 0;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    .snippet-code code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* ── Files pills ─────────────────────────────────────── */
+    .files-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .file-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: #222;
+      color: #888;
+      border: 1px solid #333;
+    }
+
+    /* ── Full-screen result overlay ──────────────────────── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #0d0d0dee;
+      z-index: 1000;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .overlay.visible {
+      display: flex;
+    }
+
+    .overlay-icon {
+      font-size: 64px;
+      margin-bottom: 24px;
+    }
+
+    .overlay-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .overlay-sub {
+      font-size: 16px;
+      color: #888;
+    }
+
+    .overlay.approved .overlay-icon::after { content: '\2713'; color: #7c6aff; }
+    .overlay.rejected .overlay-icon::after { content: '\2717'; color: #ff6a6a; }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .diagrams { grid-template-columns: 1fr; }
+      .content { padding: 16px; }
+      .header { padding: 12px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">COMPRENDO <span>review required</span></div>
+    <div class="header-actions">
+      <button class="btn btn-reject" onclick="decide(false)">
+        <span class="spinner"></span>
+        <span class="btn-text">Reject</span>
+      </button>
+      <button class="btn btn-approve" onclick="decide(true)">
+        <span class="spinner"></span>
+        <span class="btn-text">Approve</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="summary" id="summary"></div>
+
+    <!-- Diagrams -->
+    <div class="diagrams">
+      <div class="diagram-panel">
+        <h3>Current State</h3>
+        <div class="diagram-render" id="diagram-current"></div>
+      </div>
+      <div class="diagram-panel">
+        <h3>Updated State</h3>
+        <div class="diagram-render" id="diagram-updated"></div>
+      </div>
+    </div>
+
+    <!-- Explanation -->
+    <div class="section">
+      <div class="section-title">What's Changing</div>
+      <div class="explanation-text" id="explanation"></div>
+    </div>
+
+    <!-- Code Snippets -->
+    <div class="section" id="snippets-section" style="display:none">
+      <div class="section-title">Key Changes</div>
+      <div class="snippet-toggle" id="snippet-tabs"></div>
+      <div id="snippet-panels"></div>
+    </div>
+
+    <!-- Files -->
+    <div class="section">
+      <div class="section-title">Files Affected</div>
+      <div class="files-list" id="files-list"></div>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay">
+    <div class="overlay-icon"></div>
+    <div class="overlay-title" id="overlay-title"></div>
+    <div class="overlay-sub" id="overlay-sub"></div>
+  </div>
+
+  <script>
+    // Injected by cli.js
+    const plan = __COMPRENDO_DATA__;
+
+    // ── Populate UI ─────────────────────────────────────
+
+    document.getElementById('summary').textContent = plan.summary;
+    document.getElementById('explanation').textContent = plan.explanation;
+
+    // Files
+    const filesList = document.getElementById('files-list');
+    (plan.files_affected || []).forEach(f => {
+      const pill = document.createElement('span');
+      pill.className = 'file-pill';
+      pill.textContent = f;
+      filesList.appendChild(pill);
+    });
+
+    // Snippets
+    const snippets = plan.snippets || [];
+    if (snippets.length > 0) {
+      document.getElementById('snippets-section').style.display = '';
+      const tabs = document.getElementById('snippet-tabs');
+      const panels = document.getElementById('snippet-panels');
+
+      snippets.forEach((s, i) => {
+        const tab = document.createElement('button');
+        tab.className = 'snippet-tab' + (i === 0 ? ' active' : '');
+        tab.textContent = s.label;
+        tab.onclick = () => {
+          tabs.querySelectorAll('.snippet-tab').forEach(t => t.classList.remove('active'));
+          panels.querySelectorAll('.snippet-code').forEach(p => p.classList.remove('active'));
+          tab.classList.add('active');
+          document.getElementById('snippet-' + i).classList.add('active');
+        };
+        tabs.appendChild(tab);
+
+        const panel = document.createElement('div');
+        panel.className = 'snippet-code' + (i === 0 ? ' active' : '');
+        panel.id = 'snippet-' + i;
+
+        const pre = document.createElement('pre');
+        const code = document.createElement('code');
+        code.className = 'language-' + (s.language || 'plaintext');
+        code.textContent = s.code;
+        pre.appendChild(code);
+        panel.appendChild(pre);
+        panels.appendChild(panel);
+      });
+
+      document.querySelectorAll('pre code').forEach(block => {
+        hljs.highlightElement(block);
+      });
+    }
+
+    // ── Custom SVG Diagram Renderer ─────────────────────
+
+    const DIAGRAM_COLORS = {
+      component:  { bg: '#333', border: '#555', text: '#e8e8e8' },
+      service:    { bg: '#2a3a2a', border: '#4a6a4a', text: '#b8d8b8' },
+      api:        { bg: '#3a2a2a', border: '#6a4a4a', text: '#d8b8b8' },
+      database:   { bg: '#2a2a3a', border: '#4a4a6a', text: '#b8b8d8' },
+      db:         { bg: '#2a2a3a', border: '#4a4a6a', text: '#b8b8d8' },
+      middleware: { bg: '#3a3a2a', border: '#6a6a4a', text: '#d8d8b8' },
+      util:       { bg: '#2a3a3a', border: '#4a6a6a', text: '#b8d8d8' },
+      newNode:    { bg: '#3a2d6b', border: '#7c6aff', text: '#fff' },
+    };
+
+    const NODE_W = 160;
+    const NODE_H = 44;
+    const COL_GAP = 100;
+    const ROW_GAP = 28;
+    const PAD = 24;
+
+    function escSvg(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function layoutNodes(diagram) {
+      const nodes = diagram.nodes || [];
+      const edges = diagram.edges || [];
+      if (nodes.length === 0) return { positioned: [], edges };
+
+      const idSet = new Set(nodes.map(n => n.id));
+      // Build adjacency: who does each node point to?
+      const outgoing = {};
+      const incoming = {};
+      nodes.forEach(n => { outgoing[n.id] = []; incoming[n.id] = []; });
+      edges.forEach(e => {
+        if (idSet.has(e.from) && idSet.has(e.to) && e.from !== e.to) {
+          outgoing[e.from].push(e.to);
+          incoming[e.to].push(e.from);
+        }
+      });
+
+      // Assign columns via longest-path from roots (nodes with no incoming)
+      const col = {};
+      const visited = {};
+      function assignCol(id, depth) {
+        if (visited[id] && col[id] >= depth) return;
+        visited[id] = true;
+        col[id] = Math.max(col[id] || 0, depth);
+        outgoing[id].forEach(t => assignCol(t, depth + 1));
+      }
+      // Start from roots
+      const roots = nodes.filter(n => incoming[n.id].length === 0);
+      (roots.length > 0 ? roots : [nodes[0]]).forEach(r => assignCol(r.id, 0));
+      // Catch any unvisited (cycles or disconnected)
+      nodes.forEach(n => { if (!visited[n.id]) assignCol(n.id, 0); });
+
+      // Group nodes by column
+      const columns = {};
+      nodes.forEach(n => {
+        const c = col[n.id];
+        if (!columns[c]) columns[c] = [];
+        columns[c].push(n);
+      });
+
+      // Position nodes
+      const maxCol = Math.max(...Object.keys(columns).map(Number));
+      const positioned = [];
+      for (let c = 0; c <= maxCol; c++) {
+        const group = columns[c] || [];
+        group.forEach((node, row) => {
+          positioned.push({
+            ...node,
+            x: PAD + c * (NODE_W + COL_GAP),
+            y: PAD + row * (NODE_H + ROW_GAP),
+          });
+        });
+      }
+
+      return { positioned, edges };
+    }
+
+    function renderDiagram(container, diagram, newNodeIds) {
+      const nodes = diagram.nodes || [];
+      if (nodes.length === 0) {
+        container.innerHTML = '<p style="color:#666;text-align:center;padding:20px 0">No diagram data</p>';
+        return;
+      }
+
+      const { positioned, edges } = layoutNodes(diagram);
+      const newSet = new Set(newNodeIds || []);
+
+      // Calculate SVG dimensions
+      const maxX = Math.max(...positioned.map(n => n.x)) + NODE_W + PAD;
+      const maxY = Math.max(...positioned.map(n => n.y)) + NODE_H + PAD;
+      const svgW = maxX;
+      const svgH = maxY;
+
+      // Build node position lookup
+      const posMap = {};
+      positioned.forEach(n => { posMap[n.id] = n; });
+
+      let svg = `<svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,sans-serif">`;
+
+      // Defs for arrowhead
+      svg += `<defs>
+        <marker id="arrow" viewBox="0 0 10 8" refX="10" refY="4" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,0 L10,4 L0,8 Z" fill="#666"/>
+        </marker>
+        <marker id="arrow-new" viewBox="0 0 10 8" refX="10" refY="4" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,0 L10,4 L0,8 Z" fill="#7c6aff"/>
+        </marker>
+      </defs>`;
+
+      // Render edges (behind nodes)
+      edges.forEach(e => {
+        const from = posMap[e.from];
+        const to = posMap[e.to];
+        if (!from || !to) return;
+
+        // Self-referencing edge
+        if (e.from === e.to) {
+          const cx = from.x + NODE_W / 2;
+          const cy = from.y;
+          const r = 20;
+          const isNew = newSet.has(e.from) || newSet.has(e.to);
+          const color = isNew ? '#7c6aff' : '#555';
+          svg += `<path d="M${cx - 10},${cy} C${cx - 10},${cy - r * 2} ${cx + 30},${cy - r * 2} ${cx + 10},${cy}"
+            fill="none" stroke="${color}" stroke-width="1.5" marker-end="url(#${isNew ? 'arrow-new' : 'arrow'})"/>`;
+          if (e.label) {
+            svg += `<text x="${cx + 10}" y="${cy - r * 1.5}" fill="#888" font-size="10" text-anchor="middle">${escSvg(e.label)}</text>`;
+          }
+          return;
+        }
+
+        const isNew = newSet.has(e.from) || newSet.has(e.to);
+        const color = isNew ? '#7c6aff' : '#555';
+
+        // Calculate edge start/end points
+        let x1, y1, x2, y2;
+        if (from.x < to.x) {
+          // Left to right
+          x1 = from.x + NODE_W;
+          y1 = from.y + NODE_H / 2;
+          x2 = to.x;
+          y2 = to.y + NODE_H / 2;
+        } else if (from.x > to.x) {
+          // Right to left
+          x1 = from.x;
+          y1 = from.y + NODE_H / 2;
+          x2 = to.x + NODE_W;
+          y2 = to.y + NODE_H / 2;
+        } else {
+          // Same column — go top/bottom
+          if (from.y < to.y) {
+            x1 = from.x + NODE_W / 2;
+            y1 = from.y + NODE_H;
+            x2 = to.x + NODE_W / 2;
+            y2 = to.y;
+          } else {
+            x1 = from.x + NODE_W / 2;
+            y1 = from.y;
+            x2 = to.x + NODE_W / 2;
+            y2 = to.y + NODE_H;
+          }
+        }
+
+        // Curved path
+        const midX = (x1 + x2) / 2;
+        svg += `<path d="M${x1},${y1} C${midX},${y1} ${midX},${y2} ${x2},${y2}"
+          fill="none" stroke="${color}" stroke-width="1.5" marker-end="url(#${isNew ? 'arrow-new' : 'arrow'})"/>`;
+
+        // Edge label
+        if (e.label) {
+          const lx = (x1 + x2) / 2;
+          const ly = (y1 + y2) / 2 - 6;
+          svg += `<text x="${lx}" y="${ly}" fill="#888" font-size="10" text-anchor="middle">${escSvg(e.label)}</text>`;
+        }
+      });
+
+      // Render nodes (on top)
+      positioned.forEach(n => {
+        const isNew = newSet.has(n.id);
+        const colors = isNew ? DIAGRAM_COLORS.newNode : (DIAGRAM_COLORS[n.type] || DIAGRAM_COLORS.component);
+        const rx = (n.type === 'database' || n.type === 'db') ? 2 : 8;
+
+        svg += `<rect x="${n.x}" y="${n.y}" width="${NODE_W}" height="${NODE_H}" rx="${rx}"
+          fill="${colors.bg}" stroke="${colors.border}" stroke-width="${isNew ? 2 : 1.5}"/>`;
+
+        // Node label — truncate if too long
+        const label = n.label || n.id;
+        const fontSize = label.length > 20 ? 10 : 12;
+        svg += `<text x="${n.x + NODE_W / 2}" y="${n.y + NODE_H / 2 + 1}" fill="${colors.text}"
+          font-size="${fontSize}" font-weight="500" text-anchor="middle" dominant-baseline="middle">${escSvg(label)}</text>`;
+
+        // Type badge
+        if (n.type && n.type !== 'component') {
+          svg += `<text x="${n.x + NODE_W / 2}" y="${n.y + NODE_H + 12}" fill="#555"
+            font-size="9" text-anchor="middle">${escSvg(n.type)}</text>`;
+        }
+      });
+
+      svg += '</svg>';
+      container.innerHTML = svg;
+    }
+
+    // ── Render both diagrams ────────────────────────────
+
+    function getNewNodeIds() {
+      const currentIds = new Set((plan.current_diagram?.nodes || []).map(n => n.id));
+      return (plan.updated_diagram?.nodes || [])
+        .map(n => n.id)
+        .filter(id => !currentIds.has(id));
+    }
+
+    const newNodeIds = getNewNodeIds();
+    renderDiagram(document.getElementById('diagram-current'), plan.current_diagram || {}, []);
+    renderDiagram(document.getElementById('diagram-updated'), plan.updated_diagram || {}, newNodeIds);
+
+    // ── Decision ────────────────────────────────────────
+
+    let decided = false;
+
+    async function decide(approved) {
+      if (decided) return;
+      decided = true;
+
+      const buttons = document.querySelectorAll('.btn');
+      buttons.forEach(b => { b.disabled = true; });
+      const btn = approved
+        ? document.querySelector('.btn-approve')
+        : document.querySelector('.btn-reject');
+      btn.classList.add('loading');
+
+      try {
+        await fetch('/decision', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ approved }),
+        });
+      } catch (e) {}
+
+      const overlay = document.getElementById('overlay');
+      overlay.classList.add('visible', approved ? 'approved' : 'rejected');
+      document.getElementById('overlay-title').textContent = approved
+        ? 'Approved — Claude is implementing'
+        : 'Rejected — Claude will stop';
+      document.getElementById('overlay-sub').textContent = approved
+        ? 'You can close this tab.'
+        : 'Return to the terminal to provide different instructions.';
+    }
+  </script>
+</body>
+</html>
